@@ -281,8 +281,16 @@ The application uses Flask's development server with debug mode enabled by defau
 
 ## License
 
-[Add your license here]
+This project is open source and available under the [MIT License](LICENSE).
 
 ## Contributing
 
-[Add contribution guidelines here]
+Contributions are welcome! Feel free to open pull requests for:
+
+- Bug fixes
+- New slide layouts
+- Feature enhancements
+- Documentation improvements
+- Code optimizations
+
+Please ensure your code follows the existing style and structure. All contributions should maintain the modular architecture outlined in the project guidelines.
