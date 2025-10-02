@@ -74,3 +74,11 @@ Temporary Items
 
 .claude/
 CLAUDE.md
+
+# Exclude video files
+videos/*.mp4
+videos/*.webm
+videos/*.ogg
+videos/*.mov
+videos/*.avi
+videos/*.mkv

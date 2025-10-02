@@ -226,43 +226,43 @@ powderpaint/
 ## Screenshots
 
 ### Title Slide
-![Title Slide](/Users/jacopocastellano/Documents/Scripts/powderpaint/screenshots/slide1.jpg)
+![Title Slide](screenshots/slide1.jpg)
 
 ### Content Layout
-![Content Layout](/Users/jacopocastellano/Documents/Scripts/powderpaint/screenshots/slide2.jpg)
+![Content Layout](screenshots/slide2.jpg)
 
 ### Split Layout
-![Split Layout](/Users/jacopocastellano/Documents/Scripts/powderpaint/screenshots/slide3.jpg)
+![Split Layout](screenshots/slide3.jpg)
 
 ### Image Background
-![Image Background](/Users/jacopocastellano/Documents/Scripts/powderpaint/screenshots/slide4.jpg)
+![Image Background](screenshots/slide4.jpg)
 
 ### Image Focus
-![Image Focus](/Users/jacopocastellano/Documents/Scripts/powderpaint/screenshots/slide5.jpg)
+![Image Focus](screenshots/slide5.jpg)
 
 ### Hero Layout
-![Hero Layout](/Users/jacopocastellano/Documents/Scripts/powderpaint/screenshots/slide6.jpg)
+![Hero Layout](screenshots/slide6.jpg)
 
 ### Video Layout
-![Video Layout](/Users/jacopocastellano/Documents/Scripts/powderpaint/screenshots/slide7.jpg)
+![Video Layout](screenshots/slide7.jpg)
 
 ### Navigation Controls
-![Navigation Controls](/Users/jacopocastellano/Documents/Scripts/powderpaint/screenshots/slide8.jpg)
+![Navigation Controls](screenshots/slide8.jpg)
 
 ### Progress Bar
-![Progress Bar](/Users/jacopocastellano/Documents/Scripts/powderpaint/screenshots/slide9.jpg)
+![Progress Bar](screenshots/slide9.jpg)
 
 ### Fullscreen Mode
-![Fullscreen Mode](/Users/jacopocastellano/Documents/Scripts/powderpaint/screenshots/slide10.jpg)
+![Fullscreen Mode](screenshots/slide10.jpg)
 
 ### Keyboard Navigation
-![Keyboard Navigation](/Users/jacopocastellano/Documents/Scripts/powderpaint/screenshots/slide11.jpg)
+![Keyboard Navigation](screenshots/slide11.jpg)
 
 ### Slide Transitions
-![Slide Transitions](/Users/jacopocastellano/Documents/Scripts/powderpaint/screenshots/slide12.jpg)
+![Slide Transitions](screenshots/slide12.jpg)
 
 ### API Response
-![API Response](/Users/jacopocastellano/Documents/Scripts/powderpaint/screenshots/slide13.jpg)
+![API Response](screenshots/slide13.jpg)
 
 ## Development
 
