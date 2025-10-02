@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}PowderPaint{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font placeholder - you can replace this with your chosen elegant font */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        /* Smooth transitions - excluding interactive elements */
+        *:not(video):not(iframe):not(button) {
+            transition: all 0.3s ease;
+        }
+
+        /* Hide scrollbar but keep functionality */
+        body {
+            overflow: hidden;
+        }
+
+        /* Slide animation classes */
+        .slide {
+            opacity: 0;
+            transform: translateX(20px);
+            pointer-events: none;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: auto;
+        }
+
+        .slide.prev {
+            opacity: 0;
+            transform: translateX(-20px);
+            pointer-events: none;
+        }
+
+        /* Enhanced typography sizes */
+        .prose h1 {
+            font-size: 3.5rem;
+            line-height: 1.2;
+            font-weight: 700;
+        }
+
+        .prose h2 {
+            font-size: 2.5rem;
+            line-height: 1.3;
+            font-weight: 600;
+        }
+
+        .prose h3 {
+            font-size: 1.875rem;
+            line-height: 1.4;
+            font-weight: 600;
+        }
+
+        .prose p, .prose ul, .prose ol {
+            font-size: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .prose li {
+            font-size: 1.5rem;
+        }
+
+        /* Extra large for title slides */
+        .title-slide h1 {
+            font-size: 5rem;
+            line-height: 1.1;
+            font-weight: 700;
+        }
+
+        .title-slide h2 {
+            font-size: 3rem;
+            line-height: 1.2;
+            font-weight: 400;
+        }
+
+        .title-slide p {
+            font-size: 1.75rem;
+            line-height: 1.5;
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-gray-50">
+    {% block content %}{% endblock %}
+    {% block scripts %}{% endblock %}
+</body>
+</html>

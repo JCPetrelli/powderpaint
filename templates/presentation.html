@@ -1,0 +1,301 @@
+{% extends "base.html" %}
+
+{% block title %}PowderPaint - Presentation{% endblock %}
+
+{% block content %}
+<div class="relative w-screen h-screen overflow-hidden">
+    <!-- Slides Container -->
+    <div id="slides-container" class="w-full h-full">
+        {% for slide in slides %}
+        <div class="slide absolute inset-0 w-full h-full {% if loop.first %}active{% endif %}"
+             data-slide-index="{{ loop.index0 }}"
+             data-layout="{{ slide.layout }}">
+
+            {% if slide.layout == 'title' %}
+                <!-- Title Layout -->
+                <div class="flex items-center justify-center h-full bg-gradient-to-br from-slate-900 to-slate-700">
+                    <div class="title-slide text-center text-white px-12 max-w-5xl">
+                        {{ slide.content | safe }}
+                    </div>
+                </div>
+
+            {% elif slide.layout == 'content' %}
+                <!-- Content Layout -->
+                <div class="flex items-center justify-center h-full bg-white">
+                    <div class="prose prose-xl px-12 max-w-5xl">
+                        {{ slide.content | safe }}
+                    </div>
+                </div>
+
+            {% elif slide.layout == 'split' %}
+                <!-- Split Layout (Text + Image) -->
+                <div class="grid grid-cols-2 h-full">
+                    <div class="flex items-center justify-center bg-white p-12">
+                        <div class="prose prose-xl">
+                            {{ slide.content | safe }}
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-center bg-gray-100 p-12">
+                        {% if slide.image %}
+                        <img src="{{ slide.image }}" alt="Slide image" class="max-h-full max-w-full object-contain rounded-lg shadow-lg">
+                        {% else %}
+                        <div class="text-gray-400 text-6xl">📷</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+            {% elif slide.layout == 'image-bg' %}
+                <!-- Image Background Layout -->
+                <div class="relative h-full w-full">
+                    {% if slide.image %}
+                    <img src="{{ slide.image }}" alt="Background" class="absolute inset-0 w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+                    {% else %}
+                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-900 to-purple-900"></div>
+                    {% endif %}
+                    <div class="relative flex items-center justify-center h-full">
+                        <div class="prose prose-xl prose-invert text-white px-12 max-w-5xl text-center">
+                            {{ slide.content | safe }}
+                        </div>
+                    </div>
+                </div>
+
+            {% elif slide.layout == 'image-focus' %}
+                <!-- Image Focus Layout -->
+                <div class="flex items-center justify-center h-full bg-gray-50 p-12">
+                    <div class="max-w-6xl">
+                        {% if slide.image %}
+                        <img src="{{ slide.image }}" alt="Featured image" class="max-h-[70vh] mx-auto object-contain rounded-lg shadow-2xl mb-8">
+                        {% endif %}
+                        <div class="prose prose-xl">
+                            {{ slide.content | safe }}
+                        </div>
+                    </div>
+                </div>
+
+            {% elif slide.layout == 'hero' %}
+                <!-- Hero Layout - Extremely Large Text -->
+                <div class="flex items-center justify-center h-full bg-gradient-to-br from-slate-900 to-slate-700">
+                    <div class="hero-slide text-center text-white px-12 w-full">
+                        <div class="text-[12rem] font-bold leading-none tracking-tight">
+                            {{ slide.content | safe }}
+                        </div>
+                    </div>
+                </div>
+
+            {% elif slide.layout == 'video' %}
+                <!-- Video Layout -->
+                <div class="flex flex-col items-center justify-center h-full bg-gray-900 p-12">
+                    <div class="w-full max-w-6xl">
+                        {% if slide.metadata.video_url %}
+                            {% if slide.metadata.video_url.startswith('/videos/') or slide.metadata.video_url.endswith(('.mp4', '.webm', '.ogg')) %}
+                                <!-- Local video file -->
+                                <video class="w-full rounded-3xl shadow-2xl" controls>
+                                    <source src="{{ slide.metadata.video_url }}" type="video/{{ slide.metadata.video_url.split('.')[-1] }}">
+                                    Your browser does not support the video tag.
+                                </video>
+                            {% else %}
+                                <!-- Embedded video (YouTube, Vimeo, etc.) -->
+                                <div class="relative w-full" style="padding-bottom: 56.25%;">
+                                    <iframe
+                                        class="absolute top-0 left-0 w-full h-full rounded-3xl shadow-2xl"
+                                        src="{{ slide.metadata.video_url }}"
+                                        frameborder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowfullscreen>
+                                    </iframe>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                        {% if slide.content %}
+                        <div class="prose prose-xl prose-invert text-white mt-8 text-center mx-auto">
+                            {{ slide.content | safe }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+            {% else %}
+                <!-- Default Layout -->
+                <div class="flex items-center justify-center h-full bg-white">
+                    <div class="prose prose-xl px-12 max-w-5xl">
+                        {{ slide.content | safe }}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex items-center gap-4 bg-white bg-opacity-90 backdrop-blur-sm rounded-full px-6 py-3 shadow-lg">
+        <button id="prev-btn" class="text-gray-700 hover:text-gray-900 disabled:text-gray-300 disabled:cursor-not-allowed">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+        </button>
+
+        <div class="text-sm font-medium text-gray-700">
+            <span id="current-slide">1</span> / <span id="total-slides">{{ slides|length }}</span>
+        </div>
+
+        <button id="next-btn" class="text-gray-700 hover:text-gray-900 disabled:text-gray-300 disabled:cursor-not-allowed">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+        </button>
+
+        <div class="h-6 w-px bg-gray-300"></div>
+
+        <button id="fullscreen-btn" class="text-gray-700 hover:text-gray-900" title="Toggle Fullscreen (F)">
+            <svg id="fullscreen-icon-enter" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+            </svg>
+            <svg id="fullscreen-icon-exit" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 9V4.5M9 9H4.5M9 9L3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5M15 15v4.5m0-4.5l5.25 5.25" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="absolute top-0 left-0 w-full h-1 bg-gray-200">
+        <div id="progress-bar" class="h-full bg-slate-700 transition-all duration-300" style="width: {{ (1 / slides|length * 100) }}%"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const currentSlideEl = document.getElementById('current-slide');
+    const progressBar = document.getElementById('progress-bar');
+
+    function showSlide(index) {
+        // Remove active/prev classes from all slides
+        slides.forEach(slide => {
+            slide.classList.remove('active', 'prev');
+        });
+
+        // Add active class to current slide
+        slides[index].classList.add('active');
+
+        // Update UI
+        currentSlideEl.textContent = index + 1;
+        progressBar.style.width = `${((index + 1) / totalSlides) * 100}%`;
+
+        // Update button states
+        prevBtn.disabled = index === 0;
+        nextBtn.disabled = index === totalSlides - 1;
+
+        currentSlide = index;
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) {
+            slides[currentSlide].classList.add('prev');
+            showSlide(currentSlide + 1);
+        }
+    }
+
+    function prevSlide() {
+        if (currentSlide > 0) {
+            showSlide(currentSlide - 1);
+        }
+    }
+
+    // Button event listeners
+    nextBtn.addEventListener('click', nextSlide);
+    prevBtn.addEventListener('click', prevSlide);
+
+    // Fullscreen functionality
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+    const fullscreenIconEnter = document.getElementById('fullscreen-icon-enter');
+    const fullscreenIconExit = document.getElementById('fullscreen-icon-exit');
+
+    function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(err => {
+                console.log(`Error attempting to enable fullscreen: ${err.message}`);
+            });
+        } else {
+            document.exitFullscreen();
+        }
+    }
+
+    function updateFullscreenIcon() {
+        if (document.fullscreenElement) {
+            fullscreenIconEnter.classList.add('hidden');
+            fullscreenIconExit.classList.remove('hidden');
+        } else {
+            fullscreenIconEnter.classList.remove('hidden');
+            fullscreenIconExit.classList.add('hidden');
+        }
+    }
+
+    fullscreenBtn.addEventListener('click', toggleFullscreen);
+    document.addEventListener('fullscreenchange', updateFullscreenIcon);
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        // Check if we're on a video slide
+        const activeSlide = slides[currentSlide];
+        const isVideoSlide = activeSlide.dataset.layout === 'video';
+
+        // On video slides, handle video controls with J/K/L keys
+        if (isVideoSlide) {
+            const videoElement = activeSlide.querySelector('video');
+
+            // Handle video controls (only for local HTML5 videos, not iframes)
+            if (videoElement) {
+                if (e.key === 'j' || e.key === 'J') {
+                    e.preventDefault();
+                    videoElement.currentTime = Math.max(0, videoElement.currentTime - 10);
+                } else if (e.key === 'k' || e.key === 'K') {
+                    e.preventDefault();
+                    if (videoElement.paused) {
+                        videoElement.play();
+                    } else {
+                        videoElement.pause();
+                    }
+                } else if (e.key === 'l' || e.key === 'L') {
+                    e.preventDefault();
+                    videoElement.currentTime = Math.min(videoElement.duration, videoElement.currentTime + 10);
+                }
+            }
+
+            // Always allow fullscreen toggle
+            if (e.key === 'f' || e.key === 'F') {
+                e.preventDefault();
+                toggleFullscreen();
+            }
+
+            // Don't allow slide navigation on video slides
+            return;
+        }
+
+        if (e.key === 'ArrowRight' || e.key === ' ') {
+            e.preventDefault();
+            nextSlide();
+        } else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            prevSlide();
+        } else if (e.key === 'Home') {
+            e.preventDefault();
+            showSlide(0);
+        } else if (e.key === 'End') {
+            e.preventDefault();
+            showSlide(totalSlides - 1);
+        } else if (e.key === 'f' || e.key === 'F') {
+            e.preventDefault();
+            toggleFullscreen();
+        }
+    });
+
+    // Initialize
+    showSlide(0);
+</script>
+{% endblock %}
